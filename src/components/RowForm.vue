@@ -16,12 +16,10 @@
                 :items="['Immigration', 'Criminal', 'Both', 'Referred Out', 'No Service Available', 'Wrong Number']"></v-select>
         </v-col>
         <v-col cols="12" md="2">
-            <v-select label="Sub Department" v-model="department" :items="department" ></v-select>
+            <v-select label="Sub Department" v-model="Department" :items="department"></v-select>
         </v-col>
-        
-    </v-row>
 
-    
+    </v-row>
 </template>
 
 <script>
@@ -40,9 +38,10 @@ export default {
             phone: '',
             address: '',
             service: '',
+            Department: '',
             department: [],
             familyDataCompleted: [],
-            outData:[]
+            outData: []
 
         }
     }
@@ -97,15 +96,22 @@ export default {
                 this.department.push("Post Conviction - Pre Filing", "Post Conviction - MTV", "Post Conviction - Petitions", "Post Conviction - Investigations", "Post Conviction - Assessments", "Misdemeanors", "Felonies")
             }
         },
-        dataa(){
-            console.log(this.phone + this.address + this.name)
-            this.outData.push(this.phone , this.address , this.name)
-            console.log(this.outData)
-
-        }
     },
     mounted() {
         this.getData()
+    },
+    updated() {
+        if ((this.phone && this.address && this.name && this.service && this.Department) != '') {
+            let name = this.name
+            let service = this.service
+            let dep = this.Department
+            let addres = this.address
+            let phone = this.phone
+            this.outData.push(name, service, dep, addres, phone)
+            console.log(this.outData)
+            this.$emit('los_valores', this.outData)
+        }
+
     }
 
 }
