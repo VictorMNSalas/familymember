@@ -1,6 +1,6 @@
 <template>
     <v-col>
-        <v-btn  size="x-large" @click="duplicarComponente">+</v-btn >
+        <v-btn size="x-large" @click="duplicarComponente">+</v-btn >
     </v-col>
 </template>
 
