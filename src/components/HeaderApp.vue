@@ -1,6 +1,6 @@
 <template>
   <v-app-bar color="primary" density="compact">
-    <v-app-bar-title >Family Members</v-app-bar-title>
+    <h1 class="title">Retainers</h1>
   </v-app-bar>
 </template>
 
@@ -10,4 +10,9 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.title {
+  margin: 0 2rem;
+  color: white;
+}
+</style>
