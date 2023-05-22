@@ -3,7 +3,7 @@
 
         <v-col cols="12" md="2">
             <v-select label="Service Type" v-model="service" @change="subDepartment($event)"
-                :items="['Immigration', 'Criminal', 'Both', 'Referred Out', 'No Service Available', 'Wrong Number']"></v-select>
+                :items="['Immigration', 'Criminal']"></v-select>
         </v-col>
         <v-col cols="12" md="2">
             <v-select label="Sub Department" v-model="Department" :items="department"></v-select>
@@ -65,8 +65,8 @@ export default {
     computed: {
         numeroRules() {
             return [
-                (value) => !!value || 'Este campo es obligatorio',
-                (value) => /^[0-9]*$/.test(value) || 'Solo se permiten números'
+                (value) => !!value || 'This field is required',
+                (value) => /^[0-9]*$/.test(value) || 'Only numbers allowed'
             ]
         }
     }
