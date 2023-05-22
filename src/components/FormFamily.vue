@@ -1,12 +1,22 @@
 <template>
     <v-form @submit.prevent>
         <v-container class="spacing-playground mt-5">
-            <v-alert v-if="alert" text="" type="info" variant="tonal">New record have been successfully created in the
-                Cases/Retainers module.</v-alert>
+            <v-alert v-if="alert" class="alert" text="" type="info" variant="tonal">New record
+                have been successfully created in the
+                Cases/Retainers module.
+            </v-alert>
+            <v-alert v-if="error" class="alert" text="" type="error" variant="tonal">Erroneous information has been found
+                added in the
+                Fee or Initial Deposit field.
+            </v-alert>
+            <v-alert v-if="warning" class="alert" text="" type="warning" variant="tonal">There are unanswered fields, please
+                enter the
+                complete information to proceed Deposit field.
+            </v-alert>
             <h3 v-if="componentes.length <= 0">To enter new data, please click on the (➕) button.</h3>
 
             <div id="row" v-for="(component, index) in componentes[0]" :key="index">
-                <RowForm :familyData="familyInfo" v-on:los_valores="getDataForm" />
+                <RowForm :familyData="familyInfo" v-on:los_valores="getDataForm" v-on:status_alerts="statusAlerts" />
                 <!--
                 <v-col cols="12" md="1" id="delete">
                     <v-icon id="delete_icon" @click="deleteRow(index)">
@@ -19,7 +29,7 @@
             <AddRow v-on:el_arreglo="onResults" />
 
             <v-btn size="x-large" class="spacing-playground ma-3" @click="createRecord()">
-                <p v-if="!alert">Submit</p>
+                <p v-if="!loader">Submit</p>
                 <v-progress-circular v-else indeterminate :size="25"></v-progress-circular>
             </v-btn>
 
@@ -46,7 +56,8 @@ export default {
     props: {
         familyData: Array,
         id_lead: Number,
-        Matter_Client_Number: Number
+        Matter_Client_Number: Number,
+        Matter_ID: Number
     }
     ,
     data() {
@@ -56,6 +67,9 @@ export default {
             formData: [],
             data: '',
             alert: false,
+            warning: false,
+            error: false,
+            loader: false
 
         }
     },
@@ -74,14 +88,18 @@ export default {
             //console.log(958496 + data)
             this.formData.push(data)
         },
+        statusAlerts(alerts){
+            console.log(alerts)
+        }
         /*  deleteRow(index){
              // console.log("delete: ", index)
              // console.log(this.componentes[0]);
            //   this.componentes[0].splice(index, 1);
             //  console.log(this.componentes[0]);
           },*/
+        ,
         async createRecord() {
-
+            this.loader = ref(true)
             this.formData.forEach((element, index) => {
                 index = index + 1
                // console.log(element.name, index)
@@ -89,8 +107,6 @@ export default {
                 let Matter = `${this.Matter_Client_Number} - ${index}`
                // console.log("subit", Matter)
                 const that = this
-
-
                 ZOHO.CRM.API.insertRecord({
                     Entity: "Deals",
                     APIData: {
@@ -100,6 +116,7 @@ export default {
                         Stage: "Open",
                         Deal_Name: Matter,
                         Name1: element.name,
+                        Matter: this.Matter_ID,
                         Service_Type: element.service,
                         Criminal_Department: element.depC,
                         Immigrant_Department: element.depI,
@@ -122,13 +139,13 @@ export default {
 
 
         },
-        alertView(data) {
+        alertView() {
+            this.loader = ref(false)
             this.alert = ref(true)
+            this.deleteData()
           //  console.log("Entro", data)
             setTimeout(() => {
-                console.log('Han pasado 5 segundos');
-                this.alert = ref(false)
-                this.deleteData()
+               this.alert = ref(false)
             }, 3000);
         },
         deleteData() {

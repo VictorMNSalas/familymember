@@ -20,9 +20,9 @@
             <v-text-field v-model="deposit" label="Inicial Deposit" :rules="numeroRules" @change="depositCorrect"
                 required></v-text-field>
         </v-col>
-      
+
         <v-col cols="12" md="2">
-            
+
             <v-text-field v-model="fee" label="Fee" @change="feeCorrect" required :rules="numeroRules"></v-text-field>
         </v-col>
     </v-row>
@@ -56,8 +56,6 @@ export default {
             department: [],
             familyDataCompleted: [],
             outData: [],
-            feeValidation: false,
-            depositValidation: false,
 
         }
     }
@@ -73,12 +71,10 @@ export default {
     ,
     methods: {
         feeCorrect() {
-            this.feeValidation = ref(true)
             this.dataRowGet()
             //console.log("Se actualizo el fee")
         },
         depositCorrect() {
-            this.depositValidation = ref(true)
             this.dataRowGet()
             //console.log("Se actualizo el deposit")
         },
@@ -86,7 +82,7 @@ export default {
             /* eslint-disable */
             let firstname = []
 
-           // console.log('props de family', this.familyData)
+            // console.log('props de family', this.familyData)
             this.familyData[0].forEach((item) => {
                 item.forEach((data) => {
                     let name = data.Firts_Name
@@ -96,25 +92,25 @@ export default {
 
                     let fullName = `${name} ${last}`
                     firstname.push(fullName)
-               //     console.log("full name ", fullName + phone + addres)
+                    //     console.log("full name ", fullName + phone + addres)
                     this.familyDataCompleted.push({ fullName, addres, phone })
                 })
             });
             this.Firstname = firstname
-          //  console.log("na", this.Firstname)
-           // console.log("namesd", this.familyDataCompleted)
+            //  console.log("na", this.Firstname)
+            // console.log("namesd", this.familyDataCompleted)
         },
         data(data) {
             this.familyDataCompleted.forEach((item) => {
                 if (item.fullName == data) {
-               //     console.log(item.fullName)
+                    //     console.log(item.fullName)
                     this.phone = item.phone
                     this.address = item.addres
                 }
             })
         },
         subDepartment(data) {
-           // console.log(data)
+            // console.log(data)
             if (data == "Immigration") {
                 this.department = []
                 this.department.push("EOIR - Undetained", "USCIS - U-Cert", "USCIS - Petitions", "SIJS", "FOIA")
@@ -133,26 +129,25 @@ export default {
                 this.DepartmentI = this.Department
                 this.DepartmentC = ''
             }
-            if (this.feeValidation && this.depositValidation) {
-                if ((this.phone && this.fee && this.deposit && this.name && this.service && this.Department) != '') {
-                    if (this.phone.length == 12) {
-                        if (!isNaN(fee1) && !isNaN(depisit1)) {
-                            const payload = {
-                                "name": this.name,
-                                "service": this.service,
-                                "depC": this.DepartmentC,
-                                "depI": this.DepartmentI,
-                                "addres": this.address,
-                                "phone": this.phone,
-                                "fee": this.fee,
-                                "deposit": this.deposit
-                            }
-                            //this.outData.push(name, service, dep, addres, phone)
-                          //  console.log(this.outData)
-                            this.$emit('los_valores', payload)
-                            this.feeValidation = ref(false)
-                            this.depositValidation = ref(false)
+
+            if ((this.phone && this.fee && this.deposit && this.name && this.service && this.Department) != '') {
+                if (this.phone.length == 12) {
+                    if (!isNaN(fee1) && !isNaN(depisit1)) {
+                        const payload = {
+                            "name": this.name,
+                            "service": this.service,
+                            "depC": this.DepartmentC,
+                            "depI": this.DepartmentI,
+                            "addres": this.address,
+                            "phone": this.phone,
+                            "fee": this.fee,
+                            "deposit": this.deposit
                         }
+                        //this.outData.push(name, service, dep, addres, phone)
+                        //  console.log(this.outData)
+                        this.$emit('los_valores', payload)
+                        this.feeValidation = ref(false)
+                        this.depositValidation = ref(false)
                     }
                 }
             }
@@ -169,6 +164,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

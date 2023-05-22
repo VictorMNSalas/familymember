@@ -2,7 +2,9 @@
   <v-app>
     <v-main>
       <HeaderApp />
-      <FormFamilyVue :Matter_Client_Number="Matter_Client_Number" :id_lead="id_lead" :familyData="familyMembers" />
+      <ACaseOnly v-if="familyMembers.length < 1" :leadData="leadData" :Matter_ID="Matter_ID" :Matter_Client_Number="Matter_Client_Number" :id_lead="id_lead"/>
+      <FormFamilyVue v-else :Matter_ID="Matter_ID" :Matter_Client_Number="Matter_Client_Number" :id_lead="id_lead"
+        :familyData="familyMembers" />
     </v-main>
   </v-app>
 </template>
@@ -10,6 +12,7 @@
 <script>
 
 import HeaderApp from './components/HeaderApp.vue';
+import ACaseOnly from './components/ACaseOnly.vue';
 import FormFamilyVue from './components/FormFamily.vue';
 
 export default {
@@ -17,13 +20,16 @@ export default {
 
   components: {
     FormFamilyVue,
-    HeaderApp
+    HeaderApp,
+    ACaseOnly
   },
 
   data: () => ({
     familyMembers: [],
     id_lead: '',
-    Matter_Client_Number : ''
+    Matter_Client_Number: '',
+    Matter_ID: '',
+    leadData: []
     //
   }),
   mounted() {
@@ -42,15 +48,38 @@ export default {
       const crmId = data.EntityId
       const crmRecord = data.Entity
       this.id_lead = crmId
-   //console.log('id', crmId)
+      //console.log('id', crmId)
       //console.log('modulo', crmRecord)
       //console.log(data)
 
 
       const recordInformation = await ZOHO.CRM.API.getRecord({ Entity: crmRecord, RecordID: crmId })
       //console.log(recordInformation.data[0])
-      this.familyMembers.push(recordInformation.data[0].Family_Members)
+      if (recordInformation.data[0].Family_Members.length > 0) {
+        this.familyMembers.push(recordInformation.data[0].Family_Members)
+      } else {
+        const data = {
+          name: recordInformation.data[0].Last_Name, 
+          service: recordInformation.data[0].Service_Type, 
+          mobile: recordInformation.data[0].Mobile,
+          address: recordInformation.data[0].Address_Line_1 
+        }
+        this.leadData.push(data)
+       // console.log(this.leadData)
+      }
+      /*
+                        Client_Name: this.id_lead,
+                        Deal_Name: Matter,
+                        Matter: this.Matter_ID,
+                        Criminal_Department: element.depC,
+                        Immigrant_Department: element.depI,
+                        Fee: element.fee,
+                        Initial_Deposit: element.deposit
+      */
+
       this.Matter_Client_Number = recordInformation.data[0].Matter_Client_Number
+      this.Matter_ID = recordInformation.data[0].Account_Name
+      console.log("Matter: ", this.Matter_ID.id)
       //console.log(this.familyMembers[0])
       //console.log(this.Matter_Client_Number)
       /*await ZOHO.CRM.API.getRecord({ Entity: crmRecord, RecordID: crmId })
@@ -68,3 +97,9 @@ export default {
 
 };
 </script>
+
+<style>
+.alert {
+  text-align: center;
+}
+</style>
