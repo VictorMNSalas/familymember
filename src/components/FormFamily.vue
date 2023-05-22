@@ -13,6 +13,12 @@
                 enter the
                 complete information to proceed Deposit field.
             </v-alert>
+
+
+
+
+
+
             <h3 v-if="componentes.length <= 0">To enter new data, please click on the (➕) button.</h3>
 
             <div id="row" v-for="(component, index) in componentes[0]" :key="index">
@@ -22,14 +28,14 @@
         <div id="btns">
             <AddRow v-on:el_arreglo="onResults" />
 
-            <v-btn size="x-large" class="spacing-playground ma-3" @click="createRecord()">
+            <v-btn size="x-large" class="spacing-playground ma-3" @click="createRecord()" :disabled="botonDeshabilitado">
                 <p v-if="!loader">Submit</p>
                 <v-progress-circular v-else indeterminate :size="25"></v-progress-circular>
             </v-btn>
 
 
         </div>
-
+        {{ formData }}
     </v-form>
 </template>
 
@@ -62,7 +68,8 @@ export default {
             alert: false,
             warning: false,
             error: false,
-            loader: false
+            loader: false,
+            botonDeshabilitado: true
 
         }
     },
@@ -79,9 +86,14 @@ export default {
         },
         getDataForm(data) {
             //console.log(958496 + data)
-            this.formData.push(data)
+            console.log("data", data)
+            if (data) {
+                this.formData.push(data)
+                this.botonDeshabilitado = ref(false)
+            }
+
         },
-        statusAlerts(alerts){
+        statusAlerts(alerts) {
             console.log(alerts)
         }
         /*  deleteRow(index){
@@ -93,12 +105,15 @@ export default {
         ,
         async createRecord() {
             this.loader = ref(true)
+            console.log(this.formData)
+
+
             this.formData.forEach((element, index) => {
                 index = index + 1
-               // console.log(element.name, index)
+                // console.log(element.name, index)
                 this.data = element
                 let Matter = `${this.Matter_Client_Number} - ${index}`
-               // console.log("subit", Matter)
+                // console.log("subit", Matter)
                 const that = this
                 ZOHO.CRM.API.insertRecord({
                     Entity: "Deals",
@@ -136,9 +151,9 @@ export default {
             this.loader = ref(false)
             this.alert = ref(true)
             this.deleteData()
-          //  console.log("Entro", data)
+            //  console.log("Entro", data)
             setTimeout(() => {
-               this.alert = ref(false)
+                this.alert = ref(false)
             }, 3000);
         },
         deleteData() {
@@ -151,11 +166,11 @@ export default {
     },
     mounted() {
         this.pushData()
-       // console.log('se monto la form');
-     //   console.log(mdiAccount);
+        // console.log('se monto la form');
+        //   console.log(mdiAccount);
     },
     computed: {
-        
+
     }
 
 }
@@ -193,4 +208,5 @@ h3 {
 
 #delete_icon:hover {
     color: red;
-}</style>
+}
+</style>

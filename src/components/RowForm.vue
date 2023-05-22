@@ -21,9 +21,11 @@
                 required></v-text-field>
         </v-col>
 
-        <v-col cols="12" md="2">
-
+        <v-col cols="12" md="1">
             <v-text-field v-model="fee" label="Fee" @change="feeCorrect" required :rules="numeroRules"></v-text-field>
+        </v-col>
+        <v-col cols="12" md="1">
+            <v-checkbox v-model="checkbox" :label="checkLabel" color="primary" @click="dataRowGet" :disabled="botonDeshabilitado" hide-details></v-checkbox>
         </v-col>
     </v-row>
 </template>
@@ -56,6 +58,9 @@ export default {
             department: [],
             familyDataCompleted: [],
             outData: [],
+            checkbox: false,
+            botonDeshabilitado: false,
+            checkLabel: 'Save'
 
         }
     }
@@ -70,6 +75,7 @@ export default {
     }
     ,
     methods: {
+        /*
         feeCorrect() {
             this.dataRowGet()
             //console.log("Se actualizo el fee")
@@ -77,7 +83,7 @@ export default {
         depositCorrect() {
             this.dataRowGet()
             //console.log("Se actualizo el deposit")
-        },
+        },*/
         getData() {
             /* eslint-disable */
             let firstname = []
@@ -120,45 +126,50 @@ export default {
             }
         },
         dataRowGet() {
-            const fee1 = Number(this.fee);
-            const depisit1 = Number(this.deposit);
-            if (this.service == "Criminal") {
-                this.DepartmentC = this.Department
-                this.DepartmentI = ''
-            } else if (this.service == "Immigration") {
-                this.DepartmentI = this.Department
-                this.DepartmentC = ''
-            }
-
-            if ((this.phone && this.fee && this.deposit && this.name && this.service && this.Department) != '') {
-                if (this.phone.length == 12) {
-                    if (!isNaN(fee1) && !isNaN(depisit1)) {
-                        const payload = {
-                            "name": this.name,
-                            "service": this.service,
-                            "depC": this.DepartmentC,
-                            "depI": this.DepartmentI,
-                            "addres": this.address,
-                            "phone": this.phone,
-                            "fee": this.fee,
-                            "deposit": this.deposit
-                        }
-                        //this.outData.push(name, service, dep, addres, phone)
-                        //  console.log(this.outData)
-                        this.$emit('los_valores', payload)
-                        this.feeValidation = ref(false)
-                        this.depositValidation = ref(false)
-                    }
+            this.botonDeshabilitado = ref(true)
+            this.checkLabel = ref('Saved')
+            console.log(this.checkbox)
+            if (this.checkbox == true) {
+                const fee1 = Number(this.fee);
+                const depisit1 = Number(this.deposit);
+                if (this.service == "Criminal") {
+                    this.DepartmentC = this.Department
+                    this.DepartmentI = ''
+                } else if (this.service == "Immigration") {
+                    this.DepartmentI = this.Department
+                    this.DepartmentC = ''
                 }
-            }
 
+                if ((this.phone && this.fee && this.deposit && this.name && this.service && this.Department) != '') {
+                    if (this.phone.length == 12) {
+                        if (!isNaN(fee1) && !isNaN(depisit1)) {
+                            const payload = {
+                                "name": this.name,
+                                "service": this.service,
+                                "depC": this.DepartmentC,
+                                "depI": this.DepartmentI,
+                                "addres": this.address,
+                                "phone": this.phone,
+                                "fee": this.fee,
+                                "deposit": this.deposit
+                            }
+                            //this.outData.push(name, service, dep, addres, phone)
+                            //  console.log(this.outData)
+                            this.$emit('los_valores', payload)
+                            this.feeValidation = ref(false)
+                            this.depositValidation = ref(false)
+                        }
+                    }
+                } 
+            }
         }
     },
     mounted() {
         this.getData()
+        //this.$emit('funcion', this.dataRowGet())
     },
     updated() {
-        this.dataRowGet()
+        // this.dataRowGet()
     }
 
 }
