@@ -14,14 +14,15 @@
 
         </v-col>
         <v-col cols="12" md="2">
-            <v-text-field v-model="phone" label="Phone" :counter="12" :rules="numeroRules" required></v-text-field>
+            <v-text-field v-model="phone" label="Phone" :counter="12" required></v-text-field>
         </v-col>
         <v-col cols=" 12" md="2">
             <v-text-field v-model="deposit" label="Inicial Deposit" :rules="numeroRules" @change="depositCorrect"
                 required></v-text-field>
         </v-col>
+      
         <v-col cols="12" md="2">
-            <!--  <v-text-field v-model="address" label="Address" required></v-text-field>-->
+            
             <v-text-field v-model="fee" label="Fee" @change="feeCorrect" required :rules="numeroRules"></v-text-field>
         </v-col>
     </v-row>
@@ -31,6 +32,9 @@
 //import AddRow from './AddRow.vue'
 import { ref } from 'vue';
 export default {
+    icons: {
+        defaultSet: 'mdi', // This is already the default value - only for display purposes
+    },
     name: 'RowForm',
     components: {
     },
@@ -53,7 +57,7 @@ export default {
             familyDataCompleted: [],
             outData: [],
             feeValidation: false,
-            depositValidation: false
+            depositValidation: false,
 
         }
     }
@@ -70,9 +74,13 @@ export default {
     methods: {
         feeCorrect() {
             this.feeValidation = ref(true)
+            this.dataRowGet()
+            console.log("Se actualizo el fee")
         },
         depositCorrect() {
             this.depositValidation = ref(true)
+            this.dataRowGet()
+            console.log("Se actualizo el deposit")
         },
         getData() {
             /* eslint-disable */
@@ -115,54 +123,57 @@ export default {
                 this.department.push("Post Conviction - Pre Filing", "Post Conviction - MTV", "Post Conviction - Petitions", "Post Conviction - Investigations", "Post Conviction - Assessments", "Misdemeanors", "Felonies")
             }
         },
+        dataRowGet() {
+            const fee1 = Number(this.fee);
+            const depisit1 = Number(this.deposit);
+            if (this.service == "Criminal") {
+                this.DepartmentC = this.Department
+                this.DepartmentI = ''
+            } else if (this.service == "Immigration") {
+                this.DepartmentI = this.Department
+                this.DepartmentC = ''
+            }
+            if (this.feeValidation && this.depositValidation) {
+                if ((this.phone && this.fee && this.deposit && this.name && this.service && this.Department) != '') {
+                    if (this.phone.length == 12) {
+                        if (!isNaN(fee1) && !isNaN(depisit1)) {
+                            let name = this.name
+                            let service = this.service
+                            let dep = this.Department
+                            let addres = this.address
+                            let phone = this.phone
+                            const payload = {
+                                "name": this, name,
+                                "service": this.service,
+                                "depC": this.DepartmentC,
+                                "depI": this.DepartmentI,
+                                "addres": this.address,
+                                "phone": this.phone,
+                                "fee": this.fee,
+                                "deposit": this.deposit
+                            }
+                            this.outData.push(name, service, dep, addres, phone)
+                            console.log(this.outData)
+                            this.$emit('los_valores', payload)
+                            this.feeValidation = ref(false)
+                            this.depositValidation = ref(false)
+                        }
+                    }
+                }
+            }
+
+        }
     },
     mounted() {
         this.getData()
     },
     updated() {
-        const fee1 = Number(this.fee);
-        const depisit1 = Number(this.deposit);
-        if (this.service == "Criminal") {
-            this.DepartmentC = this.Department
-            this.DepartmentI = ''
-        }else if(this.service == "Immigration"){
-            this.DepartmentI = this.Department
-            this.DepartmentC = ''
-        }
-        if (this.feeValidation && this.depositValidation) {
-            if ((this.phone && this.fee && this.deposit && this.name && this.service && this.Department) != '') {
-                if (this.phone.length == 12) {
-                    if (!isNaN(fee1) && !isNaN(depisit1)) {
-                        let name = this.name
-                        let service = this.service
-                        let dep = this.Department
-                        let addres = this.address
-                        let phone = this.phone
-                        const payload = {
-                            "name": this, name,
-                            "service": this.service,
-                            "depC": this.DepartmentC,
-                            "depI": this.DepartmentI,
-                            "addres": this.address,
-                            "phone": this.phone,
-                            "fee": this.fee,
-                            "deposit": this.deposit
-                        }
-                        this.outData.push(name, service, dep, addres, phone)
-                        console.log(this.outData)
-                        this.$emit('los_valores', payload)
-                        this.feeValidation = ref(false)
-                        this.depositValidation = ref(false)
-                    } else {
-                        alert("Has entered incorrect data in the Fee and Deposit fields. The only valid values are numbers. Please enter valid data.")
-                    }
-                }
-            }
-        }
-
+        this.dataRowGet()
     }
 
 }
 </script>
 
-<style></style>
+<style>
+
+</style>

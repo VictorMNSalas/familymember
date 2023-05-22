@@ -1,12 +1,18 @@
 <template>
     <v-form @submit.prevent>
-        <v-container>
+        <v-container class="spacing-playground mt-5">
             <v-alert v-if="alert" text="" type="info" variant="tonal">New record have been successfully created in the
                 Cases/Retainers module.</v-alert>
             <h3 v-if="componentes.length <= 0">To enter new data, please click on the (➕) button.</h3>
 
-            <div v-for="(component, index) in componentes" :key="index">
+            <div id="row" v-for="(component, index) in componentes[0]" :key="index">
                 <RowForm :familyData="familyInfo" v-on:los_valores="getDataForm" />
+                <!--
+                <v-col cols="12" md="1" id="delete">
+                    <v-icon id="delete_icon" @click="deleteRow(index)">
+                        {{ deleteIcon }}
+                    </v-icon>
+                </v-col>-->
             </div>
         </v-container>
         <div id="btns">
@@ -14,13 +20,12 @@
 
             <v-btn size="x-large" class="spacing-playground ma-3" @click="createRecord()">
                 <p v-if="!alert">Submit</p>
-                <v-progress-circular v-else indeterminate  :size="25"></v-progress-circular>
+                <v-progress-circular v-else indeterminate :size="25"></v-progress-circular>
             </v-btn>
+
 
         </div>
 
-        <p>{{ formData }}</p>
-        <p>{{ data }}</p>
     </v-form>
 </template>
 
@@ -28,6 +33,8 @@
 import { ref } from 'vue'
 import AddRow from './AddRow.vue'
 import RowForm from './RowForm.vue'
+import { mdiDelete } from '@mdi/js';
+
 //import { ref } from 'vue';
 
 
@@ -49,7 +56,7 @@ export default {
             formData: [],
             data: '',
             alert: false,
-            
+
         }
     },
     methods: {
@@ -63,14 +70,19 @@ export default {
             this.componentes.push(data)
             console.log(componentes)
         },
+        /*,
         getDataForm(data) {
             console.log(958496 + data)
             this.formData.push(data)
+        },*/
+        deleteRow(index){
+            console.log("delete: ", index)
+            console.log(this.componentes[0]);
+            this.componentes[0].splice(index, 1);
+            console.log(this.componentes[0]);
         },
-
         async createRecord() {
-            this.alert = ref(true)
-            /*
+
             this.formData.forEach((element, index) => {
                 index = index + 1
                 console.log(element.name, index)
@@ -78,6 +90,8 @@ export default {
                 let Matter = `${this.Matter_Client_Number} - ${index}`
                 console.log("subit", Matter)
                 const that = this
+
+
                 ZOHO.CRM.API.insertRecord({
                     Entity: "Deals",
                     APIData: {
@@ -104,8 +118,9 @@ export default {
                     // En caso de error, se muestra el mensaje de error.
                     console.error(error);
                 });
+
             });
-            */
+
 
         },
         alertView(data) {
@@ -127,8 +142,14 @@ export default {
     },
     mounted() {
         this.pushData()
+        console.log('se monto la form');
+        console.log(mdiAccount);
+    },
+    computed: {
+        deleteIcon() {
+            return mdiDelete;
+        }
     }
-
 
 }
 </script>
@@ -138,12 +159,27 @@ export default {
     display: flex;
     width: fit-content;
     margin: auto;
-    
+
 }
-#btns p{
+#row{
+    display: flex;
+}
+#btns p {
     margin: 1rem 0;
 }
+
 h3 {
     text-align: center;
+}
+#delete{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+#delete_icon{
+    cursor: pointer;
+}
+#delete_icon:hover{
+    color: red;
 }
 </style>
