@@ -75,18 +75,18 @@ export default {
         feeCorrect() {
             this.feeValidation = ref(true)
             this.dataRowGet()
-            console.log("Se actualizo el fee")
+            //console.log("Se actualizo el fee")
         },
         depositCorrect() {
             this.depositValidation = ref(true)
             this.dataRowGet()
-            console.log("Se actualizo el deposit")
+            //console.log("Se actualizo el deposit")
         },
         getData() {
             /* eslint-disable */
             let firstname = []
 
-            console.log('props de family', this.familyData)
+           // console.log('props de family', this.familyData)
             this.familyData[0].forEach((item) => {
                 item.forEach((data) => {
                     let name = data.Firts_Name
@@ -96,25 +96,25 @@ export default {
 
                     let fullName = `${name} ${last}`
                     firstname.push(fullName)
-                    console.log("full name ", fullName + phone + addres)
+               //     console.log("full name ", fullName + phone + addres)
                     this.familyDataCompleted.push({ fullName, addres, phone })
                 })
             });
             this.Firstname = firstname
-            console.log("na", this.Firstname)
-            console.log("namesd", this.familyDataCompleted)
+          //  console.log("na", this.Firstname)
+           // console.log("namesd", this.familyDataCompleted)
         },
         data(data) {
             this.familyDataCompleted.forEach((item) => {
                 if (item.fullName == data) {
-                    console.log(item.fullName)
+               //     console.log(item.fullName)
                     this.phone = item.phone
                     this.address = item.addres
                 }
             })
         },
         subDepartment(data) {
-            console.log(data)
+           // console.log(data)
             if (data == "Immigration") {
                 this.department = []
                 this.department.push("EOIR - Undetained", "USCIS - U-Cert", "USCIS - Petitions", "SIJS", "FOIA")
@@ -137,13 +137,8 @@ export default {
                 if ((this.phone && this.fee && this.deposit && this.name && this.service && this.Department) != '') {
                     if (this.phone.length == 12) {
                         if (!isNaN(fee1) && !isNaN(depisit1)) {
-                            let name = this.name
-                            let service = this.service
-                            let dep = this.Department
-                            let addres = this.address
-                            let phone = this.phone
                             const payload = {
-                                "name": this, name,
+                                "name": this.name,
                                 "service": this.service,
                                 "depC": this.DepartmentC,
                                 "depI": this.DepartmentI,
@@ -152,8 +147,8 @@ export default {
                                 "fee": this.fee,
                                 "deposit": this.deposit
                             }
-                            this.outData.push(name, service, dep, addres, phone)
-                            console.log(this.outData)
+                            //this.outData.push(name, service, dep, addres, phone)
+                          //  console.log(this.outData)
                             this.$emit('los_valores', payload)
                             this.feeValidation = ref(false)
                             this.depositValidation = ref(false)

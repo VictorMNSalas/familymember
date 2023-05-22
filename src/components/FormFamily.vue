@@ -64,31 +64,30 @@ export default {
 
         pushData() {
             this.familyInfo.push(this.familyData)
-            console.log('family', this.familyInfo)
+            //console.log('family', this.familyInfo)
         },
         onResults(data) {
             this.componentes.push(data)
-            console.log(componentes)
+            // console.log(componentes)
         },
-        /*,
         getDataForm(data) {
-            console.log(958496 + data)
+            //console.log(958496 + data)
             this.formData.push(data)
-        },*/
-        deleteRow(index){
-            console.log("delete: ", index)
-            console.log(this.componentes[0]);
-            this.componentes[0].splice(index, 1);
-            console.log(this.componentes[0]);
         },
+        /*  deleteRow(index){
+             // console.log("delete: ", index)
+             // console.log(this.componentes[0]);
+           //   this.componentes[0].splice(index, 1);
+            //  console.log(this.componentes[0]);
+          },*/
         async createRecord() {
 
             this.formData.forEach((element, index) => {
                 index = index + 1
-                console.log(element.name, index)
+               // console.log(element.name, index)
                 this.data = element
                 let Matter = `${this.Matter_Client_Number} - ${index}`
-                console.log("subit", Matter)
+               // console.log("subit", Matter)
                 const that = this
 
 
@@ -125,7 +124,7 @@ export default {
         },
         alertView(data) {
             this.alert = ref(true)
-            console.log("Entro", data)
+          //  console.log("Entro", data)
             setTimeout(() => {
                 console.log('Han pasado 5 segundos');
                 this.alert = ref(false)
@@ -142,8 +141,8 @@ export default {
     },
     mounted() {
         this.pushData()
-        console.log('se monto la form');
-        console.log(mdiAccount);
+       // console.log('se monto la form');
+     //   console.log(mdiAccount);
     },
     computed: {
         deleteIcon() {
@@ -161,9 +160,11 @@ export default {
     margin: auto;
 
 }
-#row{
+
+#row {
     display: flex;
 }
+
 #btns p {
     margin: 1rem 0;
 }
@@ -171,15 +172,17 @@ export default {
 h3 {
     text-align: center;
 }
-#delete{
+
+#delete {
     display: flex;
     justify-content: center;
     align-content: center;
 }
-#delete_icon{
+
+#delete_icon {
     cursor: pointer;
 }
-#delete_icon:hover{
+
+#delete_icon:hover {
     color: red;
-}
-</style>
+}</style>

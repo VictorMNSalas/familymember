@@ -42,17 +42,17 @@ export default {
       const crmId = data.EntityId
       const crmRecord = data.Entity
       this.id_lead = crmId
-      console.log('id', crmId)
-      console.log('modulo', crmRecord)
+   //console.log('id', crmId)
+      //console.log('modulo', crmRecord)
       //console.log(data)
 
 
       const recordInformation = await ZOHO.CRM.API.getRecord({ Entity: crmRecord, RecordID: crmId })
-      console.log(recordInformation.data[0])
+      //console.log(recordInformation.data[0])
       this.familyMembers.push(recordInformation.data[0].Family_Members)
       this.Matter_Client_Number = recordInformation.data[0].Matter_Client_Number
-      console.log(this.familyMembers[0])
-      console.log(this.Matter_Client_Number)
+      //console.log(this.familyMembers[0])
+      //console.log(this.Matter_Client_Number)
       /*await ZOHO.CRM.API.getRecord({ Entity: crmRecord, RecordID: crmId })
         .then(function (record) {
           console.log(record.data)
