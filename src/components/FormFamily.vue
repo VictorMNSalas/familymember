@@ -17,12 +17,12 @@
 
             <div id="row" v-for="(component, index) in componentes[0]" :key="index">
                 <RowForm :familyData="familyInfo" v-on:los_valores="getDataForm" v-on:status_alerts="statusAlerts" />
-                <!--
+                
                 <v-col cols="12" md="1" id="delete">
                     <v-icon id="delete_icon" @click="deleteRow(index)">
                         {{ deleteIcon }}
                     </v-icon>
-                </v-col>-->
+                </v-col>
             </div>
         </v-container>
         <div id="btns">

@@ -1,52 +1,59 @@
 <template>
-    <v-form @submit.prevent>
-
-        <v-container class="spacing-playground mt-5">
-            <v-alert v-if="alert" class="alert" text="" type="info" variant="tonal">New record
-                have been successfully created in the
-                Cases/Retainers module.
-            </v-alert>
-            <v-alert v-if="error" class="alert" text="" type="error" variant="tonal">Erroneous information has been found
-                added in the
-                Fee or Initial Deposit field.
-            </v-alert>
-            <v-alert v-if="warning" class="alert" text="" type="warning" variant="tonal">There are unanswered fields, please
-                enter the
-                complete information to proceed Deposit field.
-            </v-alert>
-            <v-row>
-                <v-col cols="12" md="2">
-                    <v-text-field v-model="service" label="Service Type" required></v-text-field>
-                </v-col>
-                <v-col cols="12" md="2">
-                    <v-select label="Sub Department" v-model="Department" :items="department"></v-select>
-                </v-col>
-                <v-col cols="12" md="2">
-                    <v-text-field v-model="name" label="Name" required></v-text-field>
-
-                </v-col>
-                <v-col cols="12" md="2">
-                    <v-text-field v-model="phone" label="Phone" required></v-text-field>
-                </v-col>
-                <v-col cols=" 12" md="2">
-                    <v-text-field v-model="deposit" label="Inicial Deposit" :rules="numeroRules" @change="depositCorrect"
-                        required></v-text-field>
-                </v-col>
-
-                <v-col cols="12" md="2">
-                    <v-text-field v-model="fee" label="Fee" @change="feeCorrect" required
-                        :rules="numeroRules"></v-text-field>
-                </v-col>
-            </v-row>
-
-        </v-container>
-        <div id="btns">
-            <v-btn size="x-large" class="spacing-playground ma-3" @click="createRecord()">
-                <p v-if="!loader">Submit</p>
-                <v-progress-circular v-else indeterminate :size="25"></v-progress-circular>
-            </v-btn>
+    <div id="container">
+        <div id="load" v-if="!pageLoader">
+            <v-progress-circular id="loaderPage" indeterminate :size="70"></v-progress-circular>
         </div>
-    </v-form>
+
+        <v-form v-else @submit.prevent>
+            <v-container class="spacing-playground mt-5">
+                <v-alert v-if="alert" class="alert" text="" type="info" variant="tonal">New record
+                    have been successfully created in the
+                    Cases/Retainers module.
+                </v-alert>
+                <v-alert v-if="error" class="alert" text="" type="error" variant="tonal">Erroneous information has been
+                    found
+                    added in the
+                    Fee or Initial Deposit field.
+                </v-alert>
+                <v-alert v-if="warning" class="alert" text="" type="warning" variant="tonal">There are unanswered fields,
+                    please
+                    enter the
+                    complete information to proceed Deposit field.
+                </v-alert>
+                <v-row>
+                    <v-col cols="12" md="2">
+                        <v-text-field v-model="service" label="Service Type" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="2">
+                        <v-select label="Sub Department" v-model="Department" :items="department"></v-select>
+                    </v-col>
+                    <v-col cols="12" md="2">
+                        <v-text-field v-model="name" label="Name" required></v-text-field>
+
+                    </v-col>
+                    <v-col cols="12" md="2">
+                        <v-text-field v-model="phone" label="Phone" required></v-text-field>
+                    </v-col>
+                    <v-col cols=" 12" md="2">
+                        <v-text-field v-model="deposit" label="Inicial Deposit" :rules="numeroRules"
+                            @change="depositCorrect" required></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" md="2">
+                        <v-text-field v-model="fee" label="Fee" @change="feeCorrect" required
+                            :rules="numeroRules"></v-text-field>
+                    </v-col>
+                </v-row>
+
+            </v-container>
+            <div id="btns">
+                <v-btn size="x-large" class="spacing-playground ma-3" @click="createRecord()">
+                    <p v-if="!loader">Submit</p>
+                    <v-progress-circular v-else indeterminate :size="25"></v-progress-circular>
+                </v-btn>
+            </div>
+        </v-form>
+    </div>
 </template>
 
 <script>
@@ -67,7 +74,8 @@ export default {
             alert: false,
             warning: false,
             error: false,
-            loader: false
+            loader: false,
+            pageLoader: false
         }
     },
     props: {
@@ -87,16 +95,20 @@ export default {
     ,
     methods: {
 
-        async assignInfo() {
-            //console.log(this.leadData[0])
-            this.name = this.leadData[0].name
-            this.phone = this.leadData[0].mobile
-            this.service = this.leadData[0].service
-            this.address = this.leadData[0].address
-            this.subDepartment()
+        assignInfo() {
+            if (this.leadData.length > 0) {
+                console.log("Se asignan los valores de los campos: ", this.leadData[0].name)
+                this.name = this.leadData[0].name
+                this.phone = this.leadData[0].mobile
+                this.service = this.leadData[0].service
+                this.address = this.leadData[0].address
+                this.pageLoader = ref(true)
+                this.subDepartment()
+            }
+
         },
         subDepartment() {
-            // console.log(data)
+            console.log(this.name, this.phone, this.service, this.address)
             if (this.service == "Immigration") {
                 this.department = []
                 this.department.push("EOIR - Undetained", "USCIS - U-Cert", "USCIS - Petitions", "SIJS", "FOIA")
@@ -107,12 +119,7 @@ export default {
                 this.department = []
             }
         },
-        /*  deleteRow(index){
-             // console.log("delete: ", index)
-             // console.log(this.componentes[0]);
-           //   this.componentes[0].splice(index, 1);
-            //  console.log(this.componentes[0]);
-          },*/
+
         async createRecord() {
             /* eslint-disable */
 
@@ -153,6 +160,7 @@ export default {
                         console.log(response)
                         that.alertView(response)
 
+
                     }).catch(function (error) {
                         // En caso de error, se muestra el mensaje de error.
                         console.error(error);
@@ -176,18 +184,50 @@ export default {
         alertView() {
             this.alert = ref(true)
             setTimeout(() => {
+                this.deleteData()
                 this.alert = ref(false)
                 this.loader = ref(false)
             }, 3000);
         },
+        deleteData() {
+            this.name = ''
+            this.phone = ''
+            this.addres = ''
+            this.service = ''
+            this.fee = '0'
+            this.deposit = '0'
+            this.department = []
+        }
     },
     mounted() {
-        this.assignInfo()
+        console.log("espera 5 seg")
+        setTimeout(() => {
+            this.assignInfo()
+            console.log("compoenent montado")
+        }, 5000);
+
+
     }
 }
 </script>
 
 <style>
+#container {
+    height: 80%;
+}
+
+#load {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+
+}
+
+#loaderPage {
+    margin: 15% 0;
+    color: rgb(136, 136, 136);
+}
+
 .spacing-playground {
     display: flex;
     flex-direction: column;
