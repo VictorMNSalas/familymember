@@ -1,6 +1,5 @@
 <template>
     <v-row>
-
         <v-col cols="12" md="2">
             <v-select label="Service Type" v-model="service" @change="subDepartment($event)"
                 :items="['Immigration', 'Criminal']"></v-select>
@@ -17,12 +16,12 @@
             <v-text-field v-model="phone" label="Phone" :counter="12" required></v-text-field>
         </v-col>
         <v-col cols=" 12" md="2">
-            <v-text-field v-model="deposit" label="Inicial Deposit" :rules="numeroRules" @change="depositCorrect"
+            <v-text-field v-model="deposit" label="Inicial Deposit" :rules="numeroRules"
                 required></v-text-field>
         </v-col>
 
         <v-col cols="12" md="1">
-            <v-text-field v-model="fee" label="Fee" @change="feeCorrect" required :rules="numeroRules"></v-text-field>
+            <v-text-field v-model="fee" label="Fee" required :rules="numeroRules"></v-text-field>
         </v-col>
         <v-col cols="12" md="1">
             <v-checkbox v-model="checkbox" :label="checkLabel" color="primary" @click="dataRowGet" :disabled="botonDeshabilitado" hide-details></v-checkbox>
@@ -169,7 +168,7 @@ export default {
         //this.$emit('funcion', this.dataRowGet())
     },
     updated() {
-        // this.dataRowGet()
+        //this.dataRowGet()
     }
 
 }

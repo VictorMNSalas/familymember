@@ -187,6 +187,7 @@ export default {
                 this.deleteData()
                 this.alert = ref(false)
                 this.loader = ref(false)
+                ZOHO.CRM.BLUEPRINT.proceed();
             }, 3000);
         },
         deleteData() {

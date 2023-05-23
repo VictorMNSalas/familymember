@@ -35,7 +35,8 @@
 
 
         </div>
-        {{ formData }}
+      {{ formData }}
+   
     </v-form>
 </template>
 
@@ -69,33 +70,36 @@ export default {
             warning: false,
             error: false,
             loader: false,
-            botonDeshabilitado: true
+            botonDeshabilitado: true,
+            rows: [`<h1>hola</h1>` ]
+                
+        
 
-        }
+    }
+},
+methods: {
+    /* eslint-disable */
+
+    pushData() {
+        this.familyInfo.push(this.familyData)
+        //console.log('family', this.familyInfo)
     },
-    methods: {
-        /* eslint-disable */
-
-        pushData() {
-            this.familyInfo.push(this.familyData)
-            //console.log('family', this.familyInfo)
-        },
-        onResults(data) {
-            this.componentes.push(data)
-            // console.log(componentes)
-        },
-        getDataForm(data) {
-            //console.log(958496 + data)
-            console.log("data", data)
-            if (data) {
-                this.formData.push(data)
-                this.botonDeshabilitado = ref(false)
-            }
-
-        },
-        statusAlerts(alerts) {
-            console.log(alerts)
+    onResults(data) {
+        this.componentes.push(data)
+        // console.log(componentes)
+    },
+    getDataForm(data) {
+        //console.log(958496 + data)
+        console.log("data", data)
+        if (data) {
+            this.formData.push(data)
+            this.botonDeshabilitado = ref(false)
         }
+
+    },
+    statusAlerts(alerts) {
+        console.log(alerts)
+    }
         /*  deleteRow(index){
              // console.log("delete: ", index)
              // console.log(this.componentes[0]);
@@ -104,74 +108,75 @@ export default {
           },*/
         ,
         async createRecord() {
-            this.loader = ref(true)
-            console.log(this.formData)
+        this.loader = ref(true)
+        console.log(this.formData)
 
 
-            this.formData.forEach((element, index) => {
-                index = index + 1
-                // console.log(element.name, index)
-                this.data = element
-                let Matter = `${this.Matter_Client_Number} - ${index}`
-                // console.log("subit", Matter)
-                const that = this
-                ZOHO.CRM.API.insertRecord({
-                    Entity: "Deals",
-                    APIData: {
-                        // Proporciona los datos del nuevo registro que deseas insertar.
-                        // Debes incluir los campos requeridos según la configuración de tu entidad.
-                        Client_Name: this.id_lead,
-                        Stage: "Open",
-                        Deal_Name: Matter,
-                        Name1: element.name,
-                        Matter: this.Matter_ID,
-                        Service_Type: element.service,
-                        Criminal_Department: element.depC,
-                        Immigrant_Department: element.depI,
-                        Adress: element.addres,
-                        Phone: element.phone,
-                        Fee: element.fee,
-                        Initial_Deposit: element.deposit
-                    }
-                }).then(function (response) {
-                    // La respuesta contiene la información del nuevo registro insertado.
-                    console.log(response)
-                    that.alertView(response)
+        this.formData.forEach((element, index) => {
+            index = index + 1
+            // console.log(element.name, index)
+            this.data = element
+            let Matter = `${this.Matter_Client_Number} - ${index}`
+            // console.log("subit", Matter)
+            const that = this
+            ZOHO.CRM.API.insertRecord({
+                Entity: "Deals",
+                APIData: {
+                    // Proporciona los datos del nuevo registro que deseas insertar.
+                    // Debes incluir los campos requeridos según la configuración de tu entidad.
+                    Client_Name: this.id_lead,
+                    Stage: "Open",
+                    Deal_Name: Matter,
+                    Name1: element.name,
+                    Matter: this.Matter_ID,
+                    Service_Type: element.service,
+                    Criminal_Department: element.depC,
+                    Immigrant_Department: element.depI,
+                    Adress: element.addres,
+                    Phone: element.phone,
+                    Fee: element.fee,
+                    Initial_Deposit: element.deposit
+                }
+            }).then(function (response) {
+                // La respuesta contiene la información del nuevo registro insertado.
+                console.log(response)
+                that.alertView(response)
 
-                }).catch(function (error) {
-                    // En caso de error, se muestra el mensaje de error.
-                    console.error(error);
-                });
-
+            }).catch(function (error) {
+                // En caso de error, se muestra el mensaje de error.
+                console.error(error);
             });
 
+        });
 
-        },
-        alertView() {
-            this.loader = ref(false)
-            this.alert = ref(true)
-            this.deleteData()
-            //  console.log("Entro", data)
-            setTimeout(() => {
-                this.alert = ref(false)
-            }, 3000);
-        },
-        deleteData() {
-            this.componentes = []
-            this.familyInfo = []
-            this.formData = []
-            this.data = ''
-        }
 
     },
-    mounted() {
-        this.pushData()
-        // console.log('se monto la form');
-        //   console.log(mdiAccount);
+    alertView() {
+        this.loader = ref(false)
+        this.alert = ref(true)
+        this.deleteData()
+        //  console.log("Entro", data)
+        setTimeout(() => {
+            this.alert = ref(false)
+          //  ZOHO.CRM.BLUEPRINT.proceed();
+        }, 3000);
     },
-    computed: {
-
+    deleteData() {
+        this.componentes = []
+        this.familyInfo = []
+        this.formData = []
+        this.data = ''
     }
+
+},
+mounted() {
+    this.pushData()
+    // console.log('se monto la form');
+    //   console.log(mdiAccount);
+},
+computed: {
+
+}
 
 }
 </script>
