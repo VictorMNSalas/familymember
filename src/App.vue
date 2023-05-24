@@ -2,9 +2,13 @@
   <v-app>
     <v-main>
       <HeaderApp />
-      <ACaseOnly v-if="familyMembers.length < 1" :leadData="leadData" :Matter_ID="Matter_ID" :Matter_Client_Number="Matter_Client_Number" :id_lead="id_lead"/>
-      <FormFamilyVue v-else :Matter_ID="Matter_ID" :Matter_Client_Number="Matter_Client_Number" :id_lead="id_lead"
+      <FormDataMembers :leadData="leadData" :Matter_ID="Matter_ID" :Matter_Client_Number="Matter_Client_Number"
+        :id_lead="id_lead" :familyData="familyMembers" />
+      <!--
+<FormFamilyVue :Matter_ID="Matter_ID" :Matter_Client_Number="Matter_Client_Number" :id_lead="id_lead"
         :familyData="familyMembers" />
+
+      -->
     </v-main>
   </v-app>
 </template>
@@ -12,16 +16,16 @@
 <script>
 
 import HeaderApp from './components/HeaderApp.vue';
-import ACaseOnly from './components/ACaseOnly.vue';
-import FormFamilyVue from './components/FormFamily.vue';
+//import ACaseOnly from './components/ACaseOnly.vue';
+import FormDataMembers from './components/FormDataMembers.vue';
 
 export default {
   name: 'App',
 
   components: {
-    FormFamilyVue,
     HeaderApp,
-    ACaseOnly
+    //  ACaseOnly,
+    FormDataMembers
   },
 
   data: () => ({
@@ -57,15 +61,23 @@ export default {
       //console.log(recordInformation.data[0])
       if (recordInformation.data[0].Family_Members.length > 0) {
         this.familyMembers.push(recordInformation.data[0].Family_Members)
-      } else {
         const data = {
-          name: recordInformation.data[0].Last_Name, 
-          service: recordInformation.data[0].Service_Type, 
-          mobile: recordInformation.data[0].Mobile,
-          address: recordInformation.data[0].Address_Line_1 
+          Firts_Name: recordInformation.data[0].Last_Name,
+          Phone: recordInformation.data[0].Mobile,
+          Address: recordInformation.data[0].Address_Line_1,
+          Last_Name: ''
         }
         this.leadData.push(data)
-       // console.log(this.leadData)
+
+      } else {
+        const data = {
+          Firts_Name: recordInformation.data[0].Last_Name,
+          Phone: recordInformation.data[0].Mobile,
+          Address: recordInformation.data[0].Address_Line_1,
+          Last_Name: ''
+        }
+        this.leadData.push(data)
+        // console.log(this.leadData)
       }
       /*
                         Client_Name: this.id_lead,
@@ -79,7 +91,7 @@ export default {
 
       this.Matter_Client_Number = recordInformation.data[0].Matter_Client_Number
       this.Matter_ID = recordInformation.data[0].Account_Name
-      console.log("Matter: ", this.Matter_ID.id)
+      //console.log("Matter: ", this.Matter_ID.id)
       //console.log(this.familyMembers[0])
       //console.log(this.Matter_Client_Number)
       /*await ZOHO.CRM.API.getRecord({ Entity: crmRecord, RecordID: crmId })
