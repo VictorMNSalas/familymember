@@ -93,6 +93,7 @@ export default {
             botondisabled: true,
             familyDataCompleted: [],
             das: [],
+            payments_plan: [],
             rowsCount: 0,
             rowsCompletedCount: 0
 
@@ -110,7 +111,7 @@ export default {
         btnSumbitDisabled() {
             if (this.rowsCount > 0) {
                 this.botondisabled = ref(false)
-            }else{
+            } else {
                 this.botondisabled = ref(true)
             }
         },
@@ -143,9 +144,7 @@ export default {
         getData() {
 
             if (this.familyData.length == 0) {
-                console.log(this.familyData)
                 this.familyData.push([])
-                console.log(this.familyData)
             }
             this.familyData[0].push(this.leadData[0])
             let firstname = []
@@ -217,6 +216,13 @@ export default {
                                 "deposit": element.deposit
                             }
                             this.formData.push(payload)
+
+
+                            const payload_payment = {
+                                "Name": this.Matter_Client_Number.toString(),
+                                "Client_Matter_Number": this.id_lead
+                            }
+                            this.payments_plan.push(payload_payment);
                         } else {
                             this.error = ref(true)
                             setTimeout(() => {
@@ -233,11 +239,10 @@ export default {
             });
 
             if (this.formData.length == this.rowData.length) {
-                console.log('crearan esos')
+                this.createRecordPayments()
                 this.createRecord()
             } else {
                 this.formData = []
-                console.log('No son iguales')
             }
 
 
@@ -282,6 +287,24 @@ export default {
 
 
         },
+        async createRecordPayments() {
+            this.payments_plan.forEach((item) => {
+               ZOHO.CRM.API.insertRecord({
+                    Entity: "Payments_Plans",
+                    APIData: {
+                        "Name": item.Name ,
+                        "Client_Matter_Number": item.Client_Matter_Number
+                    }
+                }).then(function (response) {
+                    // La respuesta contiene la información del nuevo registro insertado.
+                    alert(response)
+
+                }).catch(function (error) {
+                    // En caso de error, se muestra el mensaje de error.
+                    console.error(error);
+                });
+            })
+        },
         alertView() {
             this.loader = ref(false)
             this.CreatedRecordAlert = ref(true)
@@ -314,7 +337,6 @@ export default {
     mounted() {
         setTimeout(() => {
             this.getData()
-            console.log("compoenent montado")
         }, 5000);
     }
 }
